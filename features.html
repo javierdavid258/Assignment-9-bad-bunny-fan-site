@@ -11,17 +11,52 @@
     <nav class="nav" aria-label="Main navigation">
       <a class="nav__title" href="index.html">Bad Bunny</a>
 
-      <ul class="nav__links">
-        <li><a class="nav__link" href="index.html">Home</a></li>
-        <li><a class="nav__link" href="discography.html">Discography</a></li>
-        <li>
-          <a class="nav__link nav__link--active"
-             href="features.html"
-             aria-current="page">Features</a>
+      <button class="nav__toggle" type="button"
+            aria-controls="nav-links"
+            aria-expanded="false"
+            aria-label="Open navigation menu">
+          &#9776;
+    </button>
+
+    <ul class="nav__links" id="nav-links">
+      <li><a class="nav__link" href="index.html">Home</a></li>
+      <li><a class="nav__link" href="discography.html">Discography</a></li>
+      <li>
+        <a class="nav__link nav__link--active"
+           href="features.html"
+           aria-current="page">Features</a>
         </li>
       </ul>
     </nav>
   </header>
+
+  <script>
+  const nav = document.querySelector(".nav");
+  const menuButton = document.querySelector(".nav__toggle");
+  const menuLinks = document.querySelector("#nav-links");
+  const phoneScreen = window.matchMedia("(max-width: 600px)");
+
+  nav.classList.add("nav--enhanced");
+
+  function resetMenu() {
+    menuLinks.hidden = phoneScreen.matches;
+    menuButton.setAttribute("aria-expanded", "false");
+    menuButton.setAttribute("aria-label", "Open navigation menu");
+  }
+
+  menuButton.addEventListener("click", () => {
+    const isOpen = menuButton.getAttribute("aria-expanded") === "true";
+    menuLinks.hidden = isOpen;
+    menuButton.setAttribute("aria-expanded", String(!isOpen));
+    menuButton.setAttribute(
+      "aria-label",
+      isOpen ? "Open navigation menu" : "Close navigation menu"
+    );
+  });
+
+  phoneScreen.addEventListener("change", resetMenu);
+  resetMenu();
+</script>
 
   <main class="features">
     <h1 class="features__heading">Who He's Worked With</h1>
