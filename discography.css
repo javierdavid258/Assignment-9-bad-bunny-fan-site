@@ -1,0 +1,396 @@
+/* ==========================================================
+   Bad Bunny fan site: Discography page
+   Colors and fonts follow the group style guide:
+   background #121212, cards/nav #242424, accent #FFD34E,
+   headings Bebas Neue #F5F2E9, body DM Sans #C7C7C7
+   ========================================================== */
+
+:root {
+    --color-background: #121212;
+    --color-surface: #242424;
+    --color-accent: #FFD34E;
+    --color-heading: #F5F2E9;
+    --color-text: #C7C7C7;
+
+    --font-heading: 'Bebas Neue', Impact, 'Arial Narrow', sans-serif;
+    --font-body: 'DM Sans', Helvetica, Arial, sans-serif;
+
+    --card-width: 260px;
+    --card-height: 360px;
+    --flip-speed: 0.6s;
+}
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+}
+
+/* ---------- Page ---------- */
+
+.page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+}
+
+/* ---------- Navigation (same class names as the homepage) ---------- */
+
+.main-nav {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 20px;
+    background-color: var(--color-surface);
+}
+
+.main-nav__link {
+    color: var(--color-accent);
+    font-family: var(--font-body);
+    font-weight: 700;
+    text-decoration: none;
+    border-bottom: 2px solid transparent;
+    transition: color 0.25s ease, border-color 0.25s ease;
+}
+
+.main-nav__link:hover,
+.main-nav__link:focus-visible {
+    color: var(--color-heading);
+    border-bottom-color: var(--color-accent);
+}
+
+.main-nav__link--active {
+    border-bottom-color: var(--color-accent);
+}
+
+/* ---------- Page header ---------- */
+
+.page-header {
+    padding: 48px 24px 16px;
+    text-align: center;
+}
+
+.page-header__title {
+    margin: 0;
+    color: var(--color-heading);
+    font-family: var(--font-heading);
+    font-size: 5rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    line-height: 1;
+}
+
+.page-header__subtitle {
+    max-width: 600px;
+    margin: 12px auto 0;
+    font-size: 1.125rem;
+}
+
+.page-header__hint {
+    margin: 16px 0 0;
+    color: var(--color-accent);
+    font-size: 0.95rem;
+}
+
+/* Show the hint that matches the device: mouse or touch screen */
+.page-header__hint-text--touch {
+    display: none;
+}
+
+@media (hover: none) {
+    .page-header__hint-text--hover {
+        display: none;
+    }
+
+    .page-header__hint-text--touch {
+        display: inline;
+    }
+}
+
+.page--touch .page-header__hint-text--hover {
+    display: none;
+}
+
+.page--touch .page-header__hint-text--touch {
+    display: inline;
+}
+
+/* ---------- Discography grid (flexbox) ---------- */
+
+.discography {
+    flex: 1;
+    padding: 24px 24px 64px;
+}
+
+.discography__heading {
+    margin: 0 0 24px;
+    color: var(--color-heading);
+    font-family: var(--font-heading);
+    font-size: 2.5rem;
+    font-weight: 400;
+    letter-spacing: 0.04em;
+    text-align: center;
+}
+
+.discography__grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+    list-style: none;
+}
+
+/* Cards rise into place one after another when the page loads */
+.discography__item {
+    animation: album-rise 0.7s ease-out both;
+}
+
+.discography__item:nth-child(2) { animation-delay: 0.08s; }
+.discography__item:nth-child(3) { animation-delay: 0.16s; }
+.discography__item:nth-child(4) { animation-delay: 0.24s; }
+.discography__item:nth-child(5) { animation-delay: 0.32s; }
+.discography__item:nth-child(6) { animation-delay: 0.40s; }
+.discography__item:nth-child(7) { animation-delay: 0.48s; }
+.discography__item:nth-child(8) { animation-delay: 0.56s; }
+
+@keyframes album-rise {
+    from {
+        opacity: 0;
+        transform: translateY(32px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ---------- Flip card ---------- */
+
+.album {
+    width: var(--card-width);
+    height: var(--card-height);
+    perspective: 1200px;
+    cursor: pointer;
+    border-radius: 14px;
+    outline: none;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.album:focus-visible {
+    box-shadow: 0 0 0 3px var(--color-accent);
+}
+
+.album__inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform var(--flip-speed) ease;
+}
+
+/* Mouse users: flip on hover. Touch and keyboard users: flip with a tap or Enter
+   (discography.js adds the album--flipped class). */
+@media (hover: hover) {
+    .page:not(.page--touch) .album:hover .album__inner {
+        transform: rotateY(180deg);
+    }
+}
+
+.album--flipped .album__inner {
+    transform: rotateY(180deg);
+}
+
+.album__face {
+    position: absolute;
+    inset: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    background-color: var(--color-surface);
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.album__face--front {
+    display: flex;
+    flex-direction: column;
+}
+
+.album__face--back {
+    display: flex;
+    flex-direction: column;
+    padding: 18px 18px 12px;
+    transform: rotateY(180deg);
+    border-top: 4px solid var(--color-accent);
+}
+
+.album__cover {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+}
+
+.album__caption {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 14px;
+}
+
+.album__title,
+.album__back-title {
+    margin: 0;
+    color: var(--color-heading);
+    font-family: var(--font-heading);
+    font-weight: 400;
+    letter-spacing: 0.03em;
+    line-height: 1.1;
+}
+
+.album__title {
+    font-size: 1.5rem;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    overflow: hidden;
+}
+
+.album__back-title {
+    font-size: 1.6rem;
+}
+
+.album__meta {
+    margin: 2px 0 0;
+    font-size: 0.85rem;
+}
+
+.album__meta--accent {
+    color: var(--color-accent);
+}
+
+.album__description {
+    margin: 10px 0;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.album__tracks {
+    flex: 1;
+    margin: 0;
+    padding: 8px 4px 0 28px;
+    overflow-y: auto;
+    border-top: 1px solid #3a3a3a;
+    font-size: 0.85rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-accent) transparent;
+}
+
+.album__track {
+    padding: 2px 0;
+}
+
+.album__track::marker {
+    color: var(--color-accent);
+}
+
+/* ---------- Footer ---------- */
+
+.footer {
+    padding: 20px;
+    background-color: var(--color-surface);
+    text-align: center;
+}
+
+.footer__credit {
+    margin: 0;
+    color: var(--color-heading);
+    font-weight: 700;
+}
+
+.footer__note {
+    margin: 4px 0 0;
+    font-size: 0.8rem;
+}
+
+/* ---------- Tablet ---------- */
+
+@media screen and (max-width: 900px) {
+    .page-header__title {
+        font-size: 4rem;
+    }
+
+    .discography__grid {
+        gap: 24px;
+    }
+}
+
+/* ---------- Phone ---------- */
+
+@media screen and (max-width: 600px) {
+    :root {
+        --card-width: min(320px, 100%);
+        --card-height: 440px;
+    }
+
+    .main-nav {
+        justify-content: center;
+        gap: 24px;
+        padding: 16px;
+    }
+
+    .page-header {
+        padding: 32px 16px 8px;
+    }
+
+    .page-header__title {
+        font-size: 3.25rem;
+    }
+
+    .page-header__subtitle {
+        font-size: 1rem;
+    }
+
+    .discography {
+        padding: 16px 16px 48px;
+    }
+
+    .discography__item {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+
+    .album__title {
+        font-size: 1.75rem;
+    }
+}
+
+/* Respect people who turn off motion in their device settings */
+@media (prefers-reduced-motion: reduce) {
+    .discography__item {
+        animation: none;
+    }
+
+    .album__inner,
+    .main-nav__link {
+        transition: none;
+    }
+}
